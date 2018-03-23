@@ -27,10 +27,11 @@ int stringCalculator(const std::string & input) {
         std::stringstream s(token);
         while(std::getline(s, token, ',')) {
             std::istringstream(token) >> val;
-            values.push_back(val);
+            if(val < 1000) {
+                values.push_back(val);
+            }
         }
     }
-    
     
     for (auto val : values)
         sum += val;
@@ -45,7 +46,7 @@ TEST_CASE("An empty string returns zero.", "[empty]") {
 TEST_CASE("single number returns a value", "[one number]") {
     REQUIRE(stringCalculator("1") == 1);
     REQUIRE(stringCalculator("2") == 2);
-    REQUIRE(stringCalculator("2000") == 2000);
+    REQUIRE(stringCalculator("200") == 200);
 }
 
 TEST_CASE("Two numbers, comma delimited, returns the sum", "[arithmetic]") {
@@ -68,4 +69,11 @@ TEST_CASE("Two numbers, newline delimited, returns the sum", "[arithmetic]") {
     REQUIRE(stringCalculator("10\n7") == 17);
     REQUIRE(stringCalculator("42\n96") == 138);
 }
+
+TEST_CASE("Numbers greater than 1000 are ignored", "[arithmetic]") {
+    REQUIRE(stringCalculator("1,2,1001") == 3);
+    REQUIRE(stringCalculator("10,1000,7") == 17);
+    REQUIRE(stringCalculator("1000,42,96") == 138);
+}
+
 
